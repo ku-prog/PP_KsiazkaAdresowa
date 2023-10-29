@@ -65,74 +65,28 @@ vector <Adresat> wczytajPlik()
 {
     vector <Adresat> adresaci;
     Adresat nowyAdresat;
-    string liniaOdczytu = "";
-    fstream plik;
+    string liniaOdczytu = "", odczytId = "";
+    ifstream plik("plik.txt", ios::in);
 
-    plik.open("plik.txt", ios::in);
     if (!plik.good())
-        cout << "Nie mozna otworzyc pliku!" << endl;
-
-    int itr = 0;
-    string dane = "";
+    {
+        cout << "Plik nie istnieje lub wystapil blad poczas proby otwarcia!" << endl;
+        system("pause");
+        return adresaci;
+    }
 
     while(getline(plik, liniaOdczytu))
     {
+        istringstream iss(liniaOdczytu);
 
+        getline(iss, odczytId, '|');
+        nowyAdresat.id = stoi(odczytId);
+        getline(iss, nowyAdresat.imie, '|');
+        getline(iss, nowyAdresat.nazwisko, '|');
+        getline(iss, nowyAdresat.numerTelefonu, '|');
+        getline(iss, nowyAdresat.email, '|');
+        getline(iss, nowyAdresat.adres, '|');
 
-        while(liniaOdczytu[itr] != '|')
-        {
-            dane = liniaOdczytu.substr(0, itr + 1);
-            itr++;
-        }
-        liniaOdczytu.erase(itr - dane.length(), dane.length() + 1);
-        nowyAdresat.id = stoi(dane);
-
-        itr = 0;
-        int flaga = 0;
-
-        while(liniaOdczytu.length() != 0)
-        {
-            flaga++;
-            while(liniaOdczytu[itr] != '|')
-            {
-                dane = liniaOdczytu.substr(0, itr + 1);
-
-                if (liniaOdczytu[itr+1] == '|')
-                {
-                    switch (flaga)
-                    {
-                    case 1:
-                    {
-                        nowyAdresat.imie = dane;
-                        break;
-                    }
-                    case 2:
-                    {
-                        nowyAdresat.nazwisko = dane;
-                        break;
-                    }
-                    case 3:
-                    {
-                        nowyAdresat.numerTelefonu = dane;
-                        break;
-                    }
-                    case 4:
-                    {
-                        nowyAdresat.email = dane;
-                        break;
-                    }
-                    case 5:
-                    {
-                        nowyAdresat.adres = dane;
-                        break;
-                    }
-                    }
-                }
-                itr++;
-            }
-            liniaOdczytu.erase(itr - dane.length(), dane.length() + 1);
-            itr = 0;
-        }
         adresaci.push_back(nowyAdresat);
     }
     plik.close();
@@ -157,18 +111,14 @@ int pobierzIloscAdresatow(vector <Adresat> &adresaci)
 
 void dodajAdresata(vector <Adresat> &adresaci)
 {
-    string numerID, liniaZapisu = "";
+    string liniaZapisu = "", numerId;
     Adresat nowyAdresat;
 
     fstream plik;
     plik.open("plik.txt", ios::out|ios::app);
 
-    if(pobierzIloscAdresatow(adresaci) <= 0)
-        nowyAdresat.id = 1;
-    else
-        nowyAdresat.id = adresaci[pobierzIloscAdresatow(adresaci) - 1].id + 1;
-
-    numerID = to_string(nowyAdresat.id);
+    nowyAdresat.id = adresaci.empty() ? 1 : adresaci.back().id + 1;
+    numerId = to_string(nowyAdresat.id);
 
     cout << "Podaj imie: ";
     nowyAdresat.imie = wczytajLinie();
@@ -185,7 +135,7 @@ void dodajAdresata(vector <Adresat> &adresaci)
     cout << "Podaj adres: ";
     nowyAdresat.adres = wczytajLinie();
 
-    liniaZapisu = numerID + "|" + nowyAdresat.imie + "|" + nowyAdresat.nazwisko + "|" + nowyAdresat.numerTelefonu + "|" + nowyAdresat.email + "|" + nowyAdresat.adres + "|";
+    liniaZapisu = numerId + "|" + nowyAdresat.imie + "|" + nowyAdresat.nazwisko + "|" + nowyAdresat.numerTelefonu + "|" + nowyAdresat.email + "|" + nowyAdresat.adres + "|";
 
     plik << liniaZapisu + "\n";
 
@@ -196,6 +146,14 @@ void dodajAdresata(vector <Adresat> &adresaci)
 
 void wyszukajPoImieniu(vector <Adresat> adresaci)
 {
+        if(adresaci.size() < 1)
+    {
+        cout << "Brak danych w bazie." << endl;
+        system("pause");
+        return;
+
+    }
+
     cout << "Wprowadz szukane imie: ";
     string szukaneImie = wczytajLinie();
 
@@ -216,6 +174,14 @@ void wyszukajPoImieniu(vector <Adresat> adresaci)
 
 void wyszukajPoNazwisku(vector <Adresat> adresaci)
 {
+        if(adresaci.size() < 1)
+    {
+        cout << "Brak danych w bazie." << endl;
+        system("pause");
+        return;
+
+    }
+
     cout << "Wprowadz szukane nazwisko: ";
     string szukaneNazwisko = wczytajLinie();
 
@@ -236,6 +202,14 @@ void wyszukajPoNazwisku(vector <Adresat> adresaci)
 
 void wyswietlWszystkich(vector <Adresat> adresaci)
 {
+
+        if(adresaci.size() < 1)
+    {
+        cout << "Brak danych w bazie." << endl;
+        system("pause");
+        return;
+
+    }
 
     for(auto x : adresaci)
     {
@@ -268,11 +242,19 @@ void zapiszZmianyWPliku(vector <Adresat> &adresaci)
 
 void usunAdresata(vector <Adresat> &adresaci)
 {
+        if(adresaci.empty())
+    {
+        cout << "Brak danych w bazie." << endl;
+        system("pause");
+        return;
+
+    }
+
     cout << "Podaj numer ID uzytkownika do usuniecia: ";
     int usunID = wczytajLiczbe(), pozycjaAdresata = 0;
 
 
-    for(auto x : adresaci)
+    for(auto x : adresaci) //lepiej iteracyjnie, nie indeksowo
     {
         if(x.id == usunID)
         {
@@ -291,12 +273,22 @@ void edytujAdresata(vector <Adresat> &adresaci)
     int idDoEdycji;
     char wybor = '0';
 
+    if(adresaci.size() < 1)
+    {
+        cout << "Brak danych w bazie." << endl;
+        system("pause");
+        return;
+
+    }
+
     cout << "Podaj ID adresata do edycji: ";
     idDoEdycji = wczytajLiczbe();
 
-    for (size_t itr = 0; itr < adresaci.size(); itr++)
+
+
+    for (size_t i = 0; i < adresaci.size(); i++)
     {
-        if (adresaci[itr].id == idDoEdycji)
+        if (adresaci[i].id == idDoEdycji)
         {
             while (wybor != '6')
             {
@@ -316,59 +308,49 @@ void edytujAdresata(vector <Adresat> &adresaci)
                 {
 
                 case '1':
-                {
-                    cout << "Zmien imie dla adresata o ID " << adresaci[itr].id <<": ";
-                    adresaci[itr].imie = wczytajLinie();
+                    cout << "Zmien imie dla adresata o ID " << adresaci[i].id <<": ";
+                    adresaci[i].imie = wczytajLinie();
                     break;
-                }
 
                 case '2':
-                {
-                    cout << "Zmien nazwisko dla adresata o ID: " << adresaci[itr].id <<": ";
-                    adresaci[itr].nazwisko = wczytajLinie();
+                    cout << "Zmien nazwisko dla adresata o ID: " << adresaci[i].id <<": ";
+                    adresaci[i].nazwisko = wczytajLinie();
                     break;
-                }
 
                 case '3':
-                {
-                    cout << "Zmien numer telefonu dla adresata o ID: " << adresaci[itr].id <<": ";
-                    adresaci[itr].numerTelefonu = wczytajLinie();
+                    cout << "Zmien numer telefonu dla adresata o ID: " << adresaci[i].id <<": ";
+                    adresaci[i].numerTelefonu = wczytajLinie();
                     break;
-                }
 
                 case '4':
-                {
-                    cout << "Zmien email dla adresata o ID: " << adresaci[itr].id <<": ";
-                    adresaci[itr].email = wczytajLinie();
+                    cout << "Zmien email dla adresata o ID: " << adresaci[i].id <<": ";
+                    adresaci[i].email = wczytajLinie();
                     break;
-                }
 
                 case '5':
-                {
-                    cout << "Zmien adres dla adresata o ID: " << adresaci[itr].id <<": ";
-                    adresaci[itr].adres = wczytajLinie();
+                    cout << "Zmien adres dla adresata o ID: " << adresaci[i].id <<": ";
+                    adresaci[i].adres = wczytajLinie();
                     break;
-                }
 
                 case '6':
-                {
                     cout << "Powrot do Menu glownego." << endl;
                     break;
                 }
-                }
-
             }
         }
-
+        else
+        {
+            cout << "Brak kontaktu o podanym numerze ID." << endl;
+            system("pause");
+            break;
+        }
 
         if (wybor == '6')
         {
             zapiszZmianyWPliku(adresaci);
             break;
         }
-
     }
-
 }
 
 
@@ -378,8 +360,6 @@ int main()
 
     vector <Adresat> adresaci = wczytajPlik();
     char wybor = '0';
-
-    //int iloscAdresatow = pobierzIloscAdresatow(adresaci);
 
     while (true)
     {
@@ -400,46 +380,33 @@ int main()
         {
 
         case '1':
-        {
             dodajAdresata(adresaci);
             break;
-        }
+
         case '2':
-        {
             wyszukajPoImieniu(adresaci);
             break;
-        }
 
         case '3':
-        {
             wyszukajPoNazwisku(adresaci);
             break;
-        }
 
         case '4':
-        {
             wyswietlWszystkich(adresaci);
             break;
-        }
 
         case '5':
-        {
             usunAdresata(adresaci);
             break;
-        }
 
         case '6':
-        {
             edytujAdresata(adresaci);
             break;
-        }
 
         case '9':
-        {
             cout << "Konczenie pracy programu..." << endl;
             exit(0);
             break;
-        }
 
         }
 
@@ -448,4 +415,3 @@ int main()
 
     return 0;
 }
-
