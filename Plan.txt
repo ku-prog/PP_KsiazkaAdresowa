@@ -1,8 +1,8 @@
 Plan zadania:
 1. Stworzyc panel logowania Uzytkownikow - Logowanie, Rejestracja, Zamknij Program.
 2. Po zalogowaniu Uzytkownik widzi opcje tak jak do tej pory + dochodzi opcja "Zmien haslo" i zakonczenie programu zastapione jest przez "Wyloguj sie".
-4. Praca na dwoch plikach tekstowych - "Uzyktownicy.txt" idUzytkownika|nazwa|haslo oraz "Adresaci.txt" idAdresata|idU¿ytkownika|imie|nazwisko|numerTelefonu|email|adres|
-5. Wczytywaæ tylko kontakty dla zalogowanego konkretnego Uzytkownia - stworzyc plik tymczasowy w tym celu, np. "Adresaci_tymczasowy.txt".
+4. Praca na dwoch plikach tekstowych - "Uzyktownicy.txt" idUzytkownika|nazwa|haslo oraz "Adresaci.txt" idAdresata|idUÅ¼ytkownika|imie|nazwisko|numerTelefonu|email|adres|
+5. WczytywaÄ‡ tylko kontakty dla zalogowanego konkretnego Uzytkownia - stworzyc plik tymczasowy w tym celu, np. "Adresaci_tymczasowy.txt".
 6. Zapisywanie zmian do pliku tymczasowego "Adresaci_tymczasowy.txt".
-7. Przepisac linijka po linijce kontakty do "Adresaci_tymczasowy.txt" tak aby zrobiæ zaktualizowana kopie "Adresaci.txt".
+7. Przepisac linijka po linijce kontakty do "Adresaci_tymczasowy.txt" tak aby zrobic zaktualizowana kopie "Adresaci.txt".
 8. Podmienic "Adresaci.txt" na "Adresaci_tymczasowy.txt".
