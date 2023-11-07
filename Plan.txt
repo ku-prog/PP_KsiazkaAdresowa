@@ -4,5 +4,7 @@ Plan zadania:
 4. Praca na dwoch plikach tekstowych - "Uzyktownicy.txt" idUzytkownika|nazwa|haslo oraz "Adresaci.txt" idAdresata|idUżytkownika|imie|nazwisko|numerTelefonu|email|adres|
 5. Wczytywać tylko kontakty dla zalogowanego konkretnego Uzytkownia - stworzyc plik tymczasowy w tym celu, np. "Adresaci_tymczasowy.txt".
 6. Zapisywanie zmian do pliku tymczasowego "Adresaci_tymczasowy.txt".
-7. Przepisac linijka po linijce kontakty do "Adresaci_tymczasowy.txt" tak aby zrobic zaktualizowana kopie "Adresaci.txt".
+7. W funkcji zapisywania wektora do pliku:
+    a. Otworzyc dwa pliki - oryginalny Adresaci.txt oraz tymczasowy Adresaci_tymczasowy.txt.
+    b.
 8. Podmienic "Adresaci.txt" na "Adresaci_tymczasowy.txt".
