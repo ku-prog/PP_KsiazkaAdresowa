@@ -241,13 +241,10 @@ void przepiszDanePlikow(vector <Adresat> &adresaci, int idZalogowanegoUzytkownik
     plikAdresaciTymczasowy.close();
 }
 
-void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
+int znajdzOstatniNrIdAdresata()
 {
-
-    string liniaZapisu = "", numerIdAdresata, ostatniaLinia = "", liniaOdczytu = "", odczytIdAdresata = "", buforOdczytu = "";
     int idOstatniegoAdresata = 0;
-    Adresat nowyAdresat;
-
+    string liniaOdczytu = "", odczytIdAdresata = "", buforOdczytu = "";
     fstream plik;
     plik.open("Adresaci.txt", ios::in);
 
@@ -264,10 +261,22 @@ void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
         getline(iss, buforOdczytu, '|');
         getline(iss, buforOdczytu, '|');
         getline(iss, buforOdczytu, '|');
-
     }
 
     plik.close();
+
+    return idOstatniegoAdresata;
+}
+
+void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
+{
+
+    string liniaZapisu = "", numerIdAdresata;
+    int idOstatniegoAdresata = 0;
+    fstream plik;
+    Adresat nowyAdresat;
+
+    idOstatniegoAdresata = znajdzOstatniNrIdAdresata();
 
     nowyAdresat.idAdresata= !idOstatniegoAdresata ? 1 : idOstatniegoAdresata + 1;
     numerIdAdresata= to_string(nowyAdresat.idAdresata);
@@ -299,8 +308,6 @@ void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
 
     cout << "Dodano nowy wpis: " << liniaZapisu << endl;
     system("pause");
-
-    //przepiszDanePlikow(adresaci, idZalogowanegoUzytkownika);
 }
 
 void wyszukajPoImieniu(vector <Adresat> adresaci)
