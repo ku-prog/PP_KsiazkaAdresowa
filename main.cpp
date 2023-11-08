@@ -159,36 +159,36 @@ vector<Uzytkownik> rejestracjaUzytkownika(vector<Uzytkownik> &uzytkownicy)
     return uzytkownicy;
 }
 
-int logowanieUzytkownika(vector<Uzytkownik> &uzytkownicy)
+void logowanieUzytkownika(vector<Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkownik)
 {
-    string loginTest, hasloTest, idUzytkownika;
-
-    cout << "Podaj login:";
-    loginTest = wczytajLinie();
+    cout << "Podaj login: ";
+    zalogowanyUzytkownik.login = wczytajLinie();
 
 
-
-    for (auto zalogowanyUzytkownik : uzytkownicy)
+    for (auto testowyUzytkownik : uzytkownicy)
     {
-        if (zalogowanyUzytkownik.login == loginTest)
+        if (testowyUzytkownik.login == zalogowanyUzytkownik.login)
         {
             cout << "Podaj haslo: ";
-            hasloTest = wczytajLinie();
+            zalogowanyUzytkownik.haslo = wczytajLinie();
 
-            if(hasloTest == zalogowanyUzytkownik.haslo)
+            if(testowyUzytkownik.haslo == zalogowanyUzytkownik.haslo)
             {
-               return zalogowanyUzytkownik.id;
+                zalogowanyUzytkownik.id = testowyUzytkownik.id;
+                return;
             }
 
             else
             {
                 cout << "Login lub haslo niepoprawne." << endl;
                 system("pause");
-                return 0;
+                return;
             }
         }
     }
-    return 0;
+    cout << "Login lub haslo niepoprawne." << endl;
+    system("pause");
+    return;
 }
 
 void zmienHaslo()
@@ -507,8 +507,9 @@ void przejdzDoMenuZalogowanegoUzytkownika(int zalogowanyUzytkownik)
 int main()
 {
     vector<Uzytkownik> uzytkownicy = wczytajPlikUzytkownikow();
+    Uzytkownik zalogowanyUzytkownik;
     char wybor;
-    int zalogowanyUzytkownik = 0;
+
 
     while (true)
     {
@@ -521,6 +522,7 @@ int main()
         cout << "Wybierz opcje: " << endl;
 
         wybor = wczytajZnak();
+        zalogowanyUzytkownik.id = 0;
 
         switch (wybor)
         {
@@ -529,7 +531,7 @@ int main()
             break;
 
         case '2':
-            zalogowanyUzytkownik = logowanieUzytkownika(uzytkownicy);
+            logowanieUzytkownika(uzytkownicy, zalogowanyUzytkownik);
             break;
 
         case '9':
@@ -542,11 +544,12 @@ int main()
             system("pause");
             break;
         }
-        if(zalogowanyUzytkownik != 0)
+        if(zalogowanyUzytkownik.id != 0)
         {
-            cout << "Logowanie uzytkownika o ID: " << zalogowanyUzytkownik << endl;
-            //break;
-            przejdzDoMenuZalogowanegoUzytkownika(zalogowanyUzytkownik);
+            system("cls");
+            cout << "Witaj " << zalogowanyUzytkownik.login << "!" << endl;
+            system("pause");
+            przejdzDoMenuZalogowanegoUzytkownika(zalogowanyUzytkownik.id);
         }
 
     }
