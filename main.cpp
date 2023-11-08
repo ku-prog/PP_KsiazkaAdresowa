@@ -191,9 +191,35 @@ void logowanieUzytkownika(vector<Uzytkownik> &uzytkownicy, Uzytkownik &zalogowan
     return;
 }
 
-void zmienHaslo()
+void zapiszZmianyWPlikuUzytkownikow(vector <Uzytkownik> &uzytkownicy)
 {
+    string liniaZapisu = "";
+    fstream plikUzytkownicy;
+    plikUzytkownicy.open("Uzytkownicy.txt", ios::out|ios::trunc);
+    plikUzytkownicy.close();
 
+    plikUzytkownicy.open("Uzytkownicy.txt", ios::out|ios::app);
+
+    for(auto uzytkownik : uzytkownicy)
+    {
+        liniaZapisu = to_string(uzytkownik.id) + "|" + uzytkownik.login + "|" + uzytkownik.haslo + "|";
+        plikUzytkownicy << liniaZapisu + "\n";
+    }
+    plikUzytkownicy.close();
+}
+
+void zmienHaslo(vector <Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkownik)
+{
+    for (size_t i = 0; i < uzytkownicy.size(); i++)
+    {
+        if (uzytkownicy[i].id == zalogowanyUzytkownik.id)
+        {
+            cout << "Podaj nowe haslo: ";
+            uzytkownicy[i].haslo = wczytajLinie();
+            zalogowanyUzytkownik.haslo = uzytkownicy[i].haslo;
+        }
+    }
+    zapiszZmianyWPlikuUzytkownikow(uzytkownicy);
 }
 
 
@@ -441,7 +467,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
     }
 }
 
-void przejdzDoMenuZalogowanegoUzytkownika(Uzytkownik zalogowanyUzytkownik)
+void przejdzDoMenuZalogowanegoUzytkownika(vector<Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkownik)
 {
     vector <Adresat> adresaci = wczytajPlikAdresatow(zalogowanyUzytkownik.id);
     char wybor;
@@ -490,7 +516,7 @@ void przejdzDoMenuZalogowanegoUzytkownika(Uzytkownik zalogowanyUzytkownik)
             break;
 
         case '7':
-            zmienHaslo();
+            zmienHaslo(uzytkownicy, zalogowanyUzytkownik);
             break;
 
         case '9':
@@ -548,7 +574,7 @@ int main()
         {
             cout << "Witaj " << zalogowanyUzytkownik.login << "!" << endl;
             system("pause");
-            przejdzDoMenuZalogowanegoUzytkownika(zalogowanyUzytkownik);
+            przejdzDoMenuZalogowanegoUzytkownika(uzytkownicy, zalogowanyUzytkownik);
         }
 
     }
