@@ -222,17 +222,57 @@ void zmienHaslo(vector <Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkown
     zapiszZmianyWPlikuUzytkownikow(uzytkownicy);
 }
 
+void przepiszDanePlikow(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
+{
+    string liniaOdczytu = "";
+    fstream plikAdresaciOryginalny, plikAdresaciTymczasowy;
+
+    plikAdresaciOryginalny.open("Adresaci.txt", ios::in);
+    plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::out|ios::app);
+
+//    while(getlinie(plikAdresaciOryginalny, liniaOdczytu))
+//    {
+//        getline(pli)
+//
+//
+//    }
+
+    plikAdresaciOryginalny.close();
+    plikAdresaciTymczasowy.close();
+}
 
 void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
 {
-    string liniaZapisu = "", numerIdAdresata;
+
+    string liniaZapisu = "", numerIdAdresata, ostatniaLinia = "", liniaOdczytu = "", odczytIdAdresata = "", buforOdczytu = "";
+    int idOstatniegoAdresata = 0;
     Adresat nowyAdresat;
 
     fstream plik;
-    plik.open("Adresaci.txt", ios::out|ios::app);
+    plik.open("Adresaci.txt", ios::in);
 
-    nowyAdresat.idAdresata= adresaci.empty() ? 1 : adresaci.back().idAdresata + 1;
+
+    while(getline(plik, liniaOdczytu))
+    {
+        istringstream iss(liniaOdczytu);
+
+        getline(iss, odczytIdAdresata, '|');
+        idOstatniegoAdresata = stoi(odczytIdAdresata);
+        getline(iss, buforOdczytu, '|');
+        getline(iss, buforOdczytu, '|');
+        getline(iss, buforOdczytu, '|');
+        getline(iss, buforOdczytu, '|');
+        getline(iss, buforOdczytu, '|');
+        getline(iss, buforOdczytu, '|');
+
+    }
+
+    plik.close();
+
+    nowyAdresat.idAdresata= !idOstatniegoAdresata ? 1 : idOstatniegoAdresata + 1;
     numerIdAdresata= to_string(nowyAdresat.idAdresata);
+
+
 
     cout << "Podaj imie: ";
     nowyAdresat.imie = wczytajLinie();
@@ -251,11 +291,16 @@ void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
 
     liniaZapisu = numerIdAdresata + "|" + to_string(idZalogowanegoUzytkownika) + "|" + nowyAdresat.imie + "|" + nowyAdresat.nazwisko + "|" + nowyAdresat.numerTelefonu + "|" + nowyAdresat.email + "|" + nowyAdresat.adres + "|";
 
+    plik.open("Adresaci.txt", ios::out|ios::app);
     plik << liniaZapisu + "\n";
-
     plik.close();
 
     adresaci.push_back(nowyAdresat);
+
+    cout << "Dodano nowy wpis: " << liniaZapisu << endl;
+    system("pause");
+
+    //przepiszDanePlikow(adresaci, idZalogowanegoUzytkownika);
 }
 
 void wyszukajPoImieniu(vector <Adresat> adresaci)
