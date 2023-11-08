@@ -197,7 +197,7 @@ void zmienHaslo()
 }
 
 
-void dodajAdresata(vector <Adresat> &adresaci, int zalogowanyUzytkownik)
+void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
 {
     string liniaZapisu = "", numerIdAdresata;
     Adresat nowyAdresat;
@@ -223,7 +223,7 @@ void dodajAdresata(vector <Adresat> &adresaci, int zalogowanyUzytkownik)
     cout << "Podaj adres: ";
     nowyAdresat.adres = wczytajLinie();
 
-    liniaZapisu = numerIdAdresata + "|" + to_string(zalogowanyUzytkownik) + "|" + nowyAdresat.imie + "|" + nowyAdresat.nazwisko + "|" + nowyAdresat.numerTelefonu + "|" + nowyAdresat.email + "|" + nowyAdresat.adres + "|";
+    liniaZapisu = numerIdAdresata + "|" + to_string(idZalogowanegoUzytkownika) + "|" + nowyAdresat.imie + "|" + nowyAdresat.nazwisko + "|" + nowyAdresat.numerTelefonu + "|" + nowyAdresat.email + "|" + nowyAdresat.adres + "|";
 
     plik << liniaZapisu + "\n";
 
@@ -441,9 +441,9 @@ void edytujAdresata(vector <Adresat> &adresaci)
     }
 }
 
-void przejdzDoMenuZalogowanegoUzytkownika(int zalogowanyUzytkownik)
+void przejdzDoMenuZalogowanegoUzytkownika(Uzytkownik zalogowanyUzytkownik)
 {
-    vector <Adresat> adresaci = wczytajPlikAdresatow(zalogowanyUzytkownik);
+    vector <Adresat> adresaci = wczytajPlikAdresatow(zalogowanyUzytkownik.id);
     char wybor;
     while (true)
     {
@@ -466,7 +466,7 @@ void przejdzDoMenuZalogowanegoUzytkownika(int zalogowanyUzytkownik)
         {
 
         case '1':
-            dodajAdresata(adresaci, zalogowanyUzytkownik);
+            dodajAdresata(adresaci, zalogowanyUzytkownik.id);
             break;
 
         case '2':
@@ -546,10 +546,9 @@ int main()
         }
         if(zalogowanyUzytkownik.id != 0)
         {
-            system("cls");
             cout << "Witaj " << zalogowanyUzytkownik.login << "!" << endl;
             system("pause");
-            przejdzDoMenuZalogowanegoUzytkownika(zalogowanyUzytkownik.id);
+            przejdzDoMenuZalogowanegoUzytkownika(zalogowanyUzytkownik);
         }
 
     }
