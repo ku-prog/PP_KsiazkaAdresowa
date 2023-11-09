@@ -8,3 +8,31 @@ Plan zadania:
     a. Otworzyc dwa pliki - oryginalny Adresaci.txt oraz tymczasowy Adresaci_tymczasowy.txt.
     b.
 8. Podmienic "Adresaci.txt" na "Adresaci_tymczasowy.txt".
+
+Zostało:
+ - zmodyfikowac usuwanie, edycje adresatow,
+
+ Edycja:
+ 1. Otwarcie pliku oryginalnego "Adresaci.txt" tylko do odczytu.
+ 2. Otwarcie pliku tymczasowego "Adresaci_tymczasowy.txt" do zapisu.
+ 3. Pobranie jednej linijki z pliku oryginalnego i zapisanie go w zmiennej string liniaOdczytu.
+ 4. Wczytanie z wektora adresatów lokalnych poszczególnych parametrów i zapisanie w zmiennej string liniaOdczytuTymaczasowa.
+  -> Porównanie na podstawie ID:
+    a. Jeśli ID linijki z pliku oryginalnego jest różne od ID z linijki wektora odczytanego -> przepisujemy linijkę oryginalna do pliku tymczasowego.
+        -> Przechodzimy do następnej linijki pliku oryginalnego, wczytana linijka wektora lokalnego zostaje.
+    b. Jeśli ID linijki z pliku oryginalnego jest równe z ID z linijki wektora odczytanego -> też przepisujemy linijkę oryginalna do pliku tymczasowego.
+        -> Przechodzimy do następnej linijki pliku oryginalnego, i kolejnej linijki wektora lokalnego.
+ 5. Porównanie zmiennych liniaOdczytu i LiniaOdczytuTymczasowa.
+    a. Jeśli są takie same - zapisujemy zmienną liniaOdczytu do pliku "Adresaci_tymaczasowy.txt".
+    b. Jeśli są różne (czyli wykryto zmianę lokalną) - zapisujemy zmienną liniaOdczytuTymczasowa do pliku "Adresaci_tymczasowy.txt".
+      -> Porównanie na podstawie ID:
+        i. Jeśli ID linijki z pliku oryginalnego jest różne od ID z linijki wektora odczytanego -> przepisujemy linijkę oryginalna do pliku tymczasowego.
+            -> Przechodzimy do następnej linijki pliku oryginalnego, wczytana linijka wektora lokalnego zostaje.
+        ii. Jeśli ID linijki z pliku oryginalnego jest równe z ID z linijki wektora odczytanego -> też przepisujemy linijkę oryginalna do pliku tymczasowego.
+            -> Przechodzimy do następnej linijki pliku oryginalnego, i kolejnej linijki wektora lokalnego.
+ 6. Powtarzamy pkt. 5 do końca pliku oryginalnego "Adresaci.txt".
+ 7. Zamykamy dostępy do plików.
+ 8. Otwieramy dostępy do plików:
+    - "Adresaci.txt" - wycinamy wszystko (trunc) i otwieramy do zapisu.
+    - "Adresaci_tymczasowy.txt" - do odczytu.
+ 9. Odczytujemy linijkę pliku "Adresaci_tymczasowy.txt" - i zapisujemy w liniaOdczytuTymczasowa
