@@ -223,16 +223,13 @@ void zmienHaslo(vector <Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkown
     zapiszZmianyWPlikuUzytkownikow(uzytkownicy);
 }
 
-void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
+void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat, int usunietyAdresat)
 {
     string liniaZapisuAdresataEdytowanego = "", liniaZapisuAdresataOryginalnego = "", liniaOdczytuPliku = "", liniaOdczytuWektora = "", idOdczyt = "", buforOdczytu = "";
     Adresat odczytanyAdresat;
     fstream plikAdresaciOryginalny, plikAdresaciTymczasowy;
 
     liniaZapisuAdresataEdytowanego = to_string(edytowanyAdresat.idAdresata) + "|" + to_string(edytowanyAdresat.idUzytkownika) + "|" + edytowanyAdresat.imie + "|" + edytowanyAdresat.nazwisko + "|" +  edytowanyAdresat.numerTelefonu + "|" + edytowanyAdresat.email + "|" + edytowanyAdresat.adres + "|";
-
-    plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::out|ios::trunc);
-    plikAdresaciTymczasowy.close();
 
     plikAdresaciOryginalny.open("Adresaci.txt", ios::in);
     plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::out|ios::app);
@@ -253,44 +250,21 @@ void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
 
         liniaZapisuAdresataOryginalnego = to_string(odczytanyAdresat.idAdresata) + "|" + to_string(odczytanyAdresat.idUzytkownika) + "|" + odczytanyAdresat.imie + "|" + odczytanyAdresat.nazwisko + "|" +  odczytanyAdresat.numerTelefonu + "|" + odczytanyAdresat.email + "|" + odczytanyAdresat.adres + "|";
 
+        if(odczytanyAdresat.idAdresata == usunietyAdresat)
+            continue;
+
         if (odczytanyAdresat.idAdresata != edytowanyAdresat.idAdresata)
             plikAdresaciTymczasowy << liniaZapisuAdresataOryginalnego << endl;
         else
             plikAdresaciTymczasowy << liniaZapisuAdresataEdytowanego << endl;
     }
+
     plikAdresaciOryginalny.close();
     plikAdresaciTymczasowy.close();
 
-    plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::trunc);
-    plikAdresaciOryginalny.close();
+    remove("Adresaci.txt");
 
-    plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::in);
-    plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::app);
-
-    while (getline(plikAdresaciTymczasowy, liniaOdczytuPliku))
-    {
-        istringstream iss(liniaOdczytuPliku);
-
-        getline(iss, idOdczyt, '|');
-        odczytanyAdresat.idAdresata = stoi(idOdczyt);
-        getline(iss, buforOdczytu, '|');
-        odczytanyAdresat.idUzytkownika = stoi(buforOdczytu);
-        getline(iss, odczytanyAdresat.imie, '|');
-        getline(iss, odczytanyAdresat.nazwisko, '|');
-        getline(iss, odczytanyAdresat.numerTelefonu, '|');
-        getline(iss, odczytanyAdresat.email, '|');
-        getline(iss, odczytanyAdresat.adres, '|');
-
-        liniaZapisuAdresataOryginalnego = to_string(odczytanyAdresat.idAdresata) + "|" + to_string(odczytanyAdresat.idUzytkownika) + "|" + odczytanyAdresat.imie + "|" + odczytanyAdresat.nazwisko + "|" +  odczytanyAdresat.numerTelefonu + "|" + odczytanyAdresat.email + "|" + odczytanyAdresat.adres + "|";
-
-        plikAdresaciOryginalny << liniaZapisuAdresataOryginalnego << endl;
-    }
-
-    plikAdresaciTymczasowy.close();
-    plikAdresaciOryginalny.close();
-
-    plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::out|ios::trunc);
-    plikAdresaciTymczasowy.close();
+    rename("Adresaci_tymczasowy.txt", "Adresaci.txt");
 }
 
 int znajdzOstatniNrIdAdresata()
@@ -439,26 +413,9 @@ void wyswietlWszystkich(vector <Adresat> adresaci)
     system("pause");
 }
 
-void zapiszZmianyWPliku(vector <Adresat> &adresaci)
-{
-    string liniaZapisu = "";
-    fstream plik;
-    plik.open("Adresaci.txt", ios::out|ios::trunc);
-    plik.close();
-
-    plik.open("Adresaci.txt", ios::out|ios::app);
-
-    for(auto adresat : adresaci)
-    {
-        liniaZapisu = to_string(adresat.idAdresata) + "|" + to_string(adresat.idUzytkownika) + "|" + adresat.imie + "|" + adresat.nazwisko + "|" + adresat.numerTelefonu + "|" + adresat.email + "|" + adresat.adres + "|" + "\n";
-        plik << liniaZapisu;
-    }
-    plik.close();
-}
-
 void usunAdresata(vector <Adresat> &adresaci)
 {
-    Adresat pustyAdresat;
+    Adresat usunietyAdresat;
 
     if(adresaci.empty())
     {
@@ -478,11 +435,20 @@ void usunAdresata(vector <Adresat> &adresaci)
             cout << "Usuwasz adresata o id: " << adresat.idAdresata<< endl;
             adresaci.erase(adresaci.begin() + pozycjaAdresata);
         }
-        pozycjaAdresata++;
-    }
-    zapiszZmianyWPliku(adresaci);
-    //przepiszDanePlikowPoEdycji(pustyAdresat);
+        else
+        {
+            pozycjaAdresata++;
 
+            if (pozycjaAdresata == adresaci.size())
+            {
+                cout << "Nie znaleziono adresata!" << endl;
+                system("pause");
+                return;
+            }
+        }
+    }
+
+    przepiszDanePlikowPoEdycji(usunietyAdresat, usunID);
     system("pause");
 }
 
@@ -490,6 +456,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
 {
 
     int idDoEdycji;
+    size_t sprawdzenieDostepnosci = 1;
     char wybor = '0';
 
     if(adresaci.size() < 1)
@@ -502,9 +469,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
     cout << "Podaj ID adresata do edycji: ";
     idDoEdycji = wczytajLiczbe();
 
-
-
-    for (size_t i = 0; i < adresaci.size(); i++)
+    for (size_t i = 1; i < adresaci.size(); i++)
     {
         if (adresaci[i].idAdresata == idDoEdycji)
         {
@@ -559,8 +524,15 @@ void edytujAdresata(vector <Adresat> &adresaci)
 
         if (wybor == '6')
         {
-            przepiszDanePlikowPoEdycji(adresaci[i]);
+            przepiszDanePlikowPoEdycji(adresaci[i], 0);
             break;
+        }
+        sprawdzenieDostepnosci++;
+
+        if (sprawdzenieDostepnosci == adresaci.size())
+        {
+            cout << "Nie znaleziono adresata!" << endl;
+            system("pause");
         }
     }
 }
