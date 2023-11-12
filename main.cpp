@@ -77,8 +77,6 @@ vector <Adresat> wczytajPlikAdresatow(int zalogowanyUzytkownik)
 
     if (!plik.good())
     {
-        cout << "Blad lub brak bazy danych." << endl;
-        system("pause");
         return adresaci;
     }
 
@@ -426,6 +424,7 @@ void usunAdresata(vector <Adresat> &adresaci)
 
     cout << "Podaj numer ID uzytkownika do usuniecia: ";
     int usunID = wczytajLiczbe(), pozycjaAdresata = 0;
+    size_t sprawdzenieDostepnosci = 0;
 
 
     for(auto adresat : adresaci)
@@ -439,7 +438,7 @@ void usunAdresata(vector <Adresat> &adresaci)
         {
             pozycjaAdresata++;
 
-            if (pozycjaAdresata == adresaci.size())
+            if (sprawdzenieDostepnosci == adresaci.size())
             {
                 cout << "Nie znaleziono adresata!" << endl;
                 system("pause");
@@ -518,6 +517,11 @@ void edytujAdresata(vector <Adresat> &adresaci)
                 case '6':
                     cout << "Powrot do Menu glownego." << endl;
                     break;
+
+                default:
+                    cout << "Nie ma takiej opcji. Wybierz ponownie" << endl;
+                    system("pause");
+                    break;
                 }
             }
         }
@@ -593,9 +597,12 @@ void przejdzDoMenuZalogowanegoUzytkownika(vector<Uzytkownik> &uzytkownicy, Uzytk
             break;
 
         case '9':
-            //wylogowanieUzytkownika();
-            //break;
             return;
+
+        default:
+            cout << "Nie ma takiej opcji. Wybierz ponownie" << endl;
+            system("pause");
+            break;
         }
 
 
