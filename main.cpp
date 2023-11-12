@@ -97,7 +97,7 @@ vector <Adresat> wczytajPlikAdresatow(int zalogowanyUzytkownik)
         getline(iss, nowyAdresat.adres, '|');
 
         if(nowyAdresat.idUzytkownika == zalogowanyUzytkownik)
-        adresaci.push_back(nowyAdresat);
+            adresaci.push_back(nowyAdresat);
     }
     plik.close();
 
@@ -258,16 +258,14 @@ void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
         else
             plikAdresaciTymczasowy << liniaZapisuAdresataEdytowanego << endl;
     }
-        plikAdresaciOryginalny.close();
-        plikAdresaciTymczasowy.close();
+    plikAdresaciOryginalny.close();
+    plikAdresaciTymczasowy.close();
 
+    plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::trunc);
+    plikAdresaciOryginalny.close();
 
-
-        plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::trunc);
-        plikAdresaciOryginalny.close();
-
-        plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::in);
-        plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::app);
+    plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::in);
+    plikAdresaciOryginalny.open("Adresaci.txt", ios::out|ios::app);
 
     while (getline(plikAdresaciTymczasowy, liniaOdczytuPliku))
     {
@@ -310,7 +308,7 @@ int znajdzOstatniNrIdAdresata()
         getline(iss, odczytIdAdresata, '|');
         idOstatniegoAdresata = stoi(odczytIdAdresata);
         for(int i = 0; i < 6; i++)
-        getline(iss, buforOdczytu, '|');
+            getline(iss, buforOdczytu, '|');
 
     }
 
@@ -359,82 +357,85 @@ void dodajAdresata(vector <Adresat> &adresaci, int idZalogowanegoUzytkownika)
     system("pause");
 }
 
+void wyswietlAdresatow(const Adresat &adresat)
+{
+    cout << "ID:             " << adresat.idAdresata<< endl;
+    cout << "Imie:           " << adresat.imie << endl;
+    cout << "Naziwsko:       " << adresat.nazwisko << endl;
+    cout << "Numer telefonu: " << adresat.numerTelefonu << endl;
+    cout << "Email:          " << adresat.email << endl;
+    cout << "Adres:          " << adresat.adres << endl << endl;
+}
+
 void wyszukajPoImieniu(vector <Adresat> adresaci)
 {
+    int licznikDopasowan = 0;
+
     if(adresaci.size() < 1)
     {
         cout << "Brak danych w bazie." << endl;
         system("pause");
         return;
-
     }
 
     cout << "Wprowadz szukane imie: ";
     string szukaneImie = wczytajLinie();
 
-    for(auto x : adresaci)
+    for(Adresat adresat : adresaci)
     {
-        if(x.imie == szukaneImie)
+        if(adresat.imie == szukaneImie)
         {
-            cout << "ID:             " << x.idAdresata<< endl;
-            cout << "Imie:           " << x.imie << endl;
-            cout << "Naziwsko:       " << x.nazwisko << endl;
-            cout << "Numer telefonu: " << x.numerTelefonu << endl;
-            cout << "Email:          " << x.email << endl;
-            cout << "Adres:          " << x.adres << endl;
+            wyswietlAdresatow(adresat);
+            licznikDopasowan++;
         }
     }
+    cout << "Liczba znalezionych adresatow: " << licznikDopasowan << endl;
     system("pause");
 }
 
 void wyszukajPoNazwisku(vector <Adresat> adresaci)
 {
+    int licznikDopasowan = 0;
+
     if(adresaci.size() < 1)
     {
         cout << "Brak danych w bazie." << endl;
         system("pause");
         return;
-
     }
 
     cout << "Wprowadz szukane nazwisko: ";
     string szukaneNazwisko = wczytajLinie();
 
-    for(auto x : adresaci)
+    for(Adresat adresat : adresaci)
     {
-        if(x.nazwisko == szukaneNazwisko)
+        if(adresat.nazwisko == szukaneNazwisko)
         {
-            cout << "ID:             " << x.idAdresata<< endl;
-            cout << "Imie:           " << x.imie << endl;
-            cout << "Naziwsko:       " << x.nazwisko << endl;
-            cout << "Numer telefonu: " << x.numerTelefonu << endl;
-            cout << "Email:          " << x.email << endl;
-            cout << "Adres:          " << x.adres << endl;
+            wyswietlAdresatow(adresat);
+            licznikDopasowan++;
         }
     }
+    cout << "Liczba znalezionych adresatow: " << licznikDopasowan << endl;
     system("pause");
 }
 
 void wyswietlWszystkich(vector <Adresat> adresaci)
 {
+    int licznikDopasowan = 0;
 
     if(adresaci.size() < 1)
     {
         cout << "Brak danych w bazie." << endl;
         system("pause");
         return;
-
     }
 
-    for(auto x : adresaci)
+    for(Adresat adresat : adresaci)
     {
-        cout << "ID:             " << x.idAdresata<< endl;
-        cout << "Imie:           " << x.imie << endl;
-        cout << "Naziwsko:       " << x.nazwisko << endl;
-        cout << "Numer telefonu: " << x.numerTelefonu << endl;
-        cout << "Email:          " << x.email << endl;
-        cout << "Adres:          " << x.adres << endl;
+        wyswietlAdresatow(adresat);
+        licznikDopasowan++;
     }
+    cout << "Lista adresatow Uzytkownika: " << licznikDopasowan << endl;
     system("pause");
 }
 
@@ -457,21 +458,22 @@ void zapiszZmianyWPliku(vector <Adresat> &adresaci)
 
 void usunAdresata(vector <Adresat> &adresaci)
 {
+    Adresat pustyAdresat;
+
     if(adresaci.empty())
     {
         cout << "Brak danych w bazie." << endl;
         system("pause");
         return;
-
     }
 
     cout << "Podaj numer ID uzytkownika do usuniecia: ";
     int usunID = wczytajLiczbe(), pozycjaAdresata = 0;
 
 
-    for(auto adresat : adresaci) //lepiej iteracyjnie, nie indeksowo
+    for(auto adresat : adresaci)
     {
-        if(adresat.idAdresata== usunID)
+        if(adresat.idAdresata == usunID)
         {
             cout << "Usuwasz adresata o id: " << adresat.idAdresata<< endl;
             adresaci.erase(adresaci.begin() + pozycjaAdresata);
@@ -479,6 +481,7 @@ void usunAdresata(vector <Adresat> &adresaci)
         pozycjaAdresata++;
     }
     zapiszZmianyWPliku(adresaci);
+    //przepiszDanePlikowPoEdycji(pustyAdresat);
 
     system("pause");
 }
