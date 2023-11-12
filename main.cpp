@@ -226,7 +226,6 @@ void zmienHaslo(vector <Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkown
 void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
 {
     string liniaZapisuAdresataEdytowanego = "", liniaZapisuAdresataOryginalnego = "", liniaOdczytuPliku = "", liniaOdczytuWektora = "", idOdczyt = "", buforOdczytu = "";
-    int i = 1, odczytIdAdresata = 0, odczytIdUzytkownika = 0;
     Adresat odczytanyAdresat;
     fstream plikAdresaciOryginalny, plikAdresaciTymczasowy;
 
@@ -276,8 +275,8 @@ void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
 
         getline(iss, idOdczyt, '|');
         odczytanyAdresat.idAdresata = stoi(idOdczyt);
-        getline(iss, idOdczyt, '|');
-        odczytanyAdresat.idUzytkownika = stoi(idOdczyt);
+        getline(iss, buforOdczytu, '|');
+        odczytanyAdresat.idUzytkownika = stoi(buforOdczytu);
         getline(iss, odczytanyAdresat.imie, '|');
         getline(iss, odczytanyAdresat.nazwisko, '|');
         getline(iss, odczytanyAdresat.numerTelefonu, '|');
@@ -290,11 +289,10 @@ void przepiszDanePlikowPoEdycji(Adresat edytowanyAdresat)
     }
 
     plikAdresaciTymczasowy.close();
+    plikAdresaciOryginalny.close();
 
     plikAdresaciTymczasowy.open("Adresaci_tymczasowy.txt", ios::out|ios::trunc);
     plikAdresaciTymczasowy.close();
-
-    plikAdresaciOryginalny.close();
 }
 
 int znajdzOstatniNrIdAdresata()
@@ -487,6 +485,7 @@ void usunAdresata(vector <Adresat> &adresaci)
 
 void edytujAdresata(vector <Adresat> &adresaci)
 {
+
     int idDoEdycji;
     char wybor = '0';
 
@@ -554,17 +553,10 @@ void edytujAdresata(vector <Adresat> &adresaci)
                 }
             }
         }
-//        else
-//        {
-//            cout << "Brak kontaktu o podanym numerze ID." << endl;
-//            system("pause");
-//            break;
-//        }
 
         if (wybor == '6')
         {
             przepiszDanePlikowPoEdycji(adresaci[i]);
-            //zapiszZmianyWPliku(adresaci);
             break;
         }
     }
@@ -572,10 +564,10 @@ void edytujAdresata(vector <Adresat> &adresaci)
 
 void przejdzDoMenuZalogowanegoUzytkownika(vector<Uzytkownik> &uzytkownicy, Uzytkownik &zalogowanyUzytkownik)
 {
-    vector <Adresat> adresaci = wczytajPlikAdresatow(zalogowanyUzytkownik.id);
     char wybor;
     while (true)
     {
+        vector <Adresat> adresaci = wczytajPlikAdresatow(zalogowanyUzytkownik.id);
         system("cls");
         cout << "---------->MENU GLOWNE<----------" << endl;
         cout << "---------------------------------" << endl;
@@ -678,8 +670,6 @@ int main()
         }
         if(zalogowanyUzytkownik.id != 0)
         {
-            cout << "Witaj " << zalogowanyUzytkownik.login << "!" << endl;
-            system("pause");
             przejdzDoMenuZalogowanegoUzytkownika(uzytkownicy, zalogowanyUzytkownik);
         }
 
