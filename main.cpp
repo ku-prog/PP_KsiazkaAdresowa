@@ -455,7 +455,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
 {
 
     int idDoEdycji;
-    size_t sprawdzenieDostepnosci = 1;
+    size_t sprawdzenieDostepnosci = 0;
     char wybor = '0';
 
     if(adresaci.size() < 1)
@@ -468,7 +468,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
     cout << "Podaj ID adresata do edycji: ";
     idDoEdycji = wczytajLiczbe();
 
-    for (size_t i = 1; i < adresaci.size(); i++)
+    for (size_t i = 0; i < adresaci.size(); i++)
     {
         if (adresaci[i].idAdresata == idDoEdycji)
         {
@@ -531,6 +531,7 @@ void edytujAdresata(vector <Adresat> &adresaci)
             przepiszDanePlikowPoEdycji(adresaci[i], 0);
             break;
         }
+
         sprawdzenieDostepnosci++;
 
         if (sprawdzenieDostepnosci == adresaci.size())
